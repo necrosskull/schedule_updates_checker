@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "schedule-checker"
+version = "0.1.0"
+description = ""
+authors = ["Slava Kuryaev <92830706+necrosskull@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "schedule_checker"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+rtu-schedule-parser = {git = "https://github.com/mirea-ninja/rtu-schedule-parser"}
+python-dotenv = "^1.0.0"
+python-telegram-bot = {extras = ["job-queue"], version = "^20.4"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
