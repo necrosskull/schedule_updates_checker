@@ -54,7 +54,3 @@ def main():
     application = Application.builder().token(TELEGRAM_TOKEN).build()
     application.job_queue.run_repeating(send_updates, interval=60, first=0)
     application.run_polling()
-
-
-if __name__ == '__main__':
-    main()
