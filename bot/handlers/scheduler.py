@@ -3,6 +3,8 @@ from telegram.ext import CommandHandler, ContextTypes, CallbackQueryHandler, Mes
 from telegram.ext import Application
 from bot.config import TELEGRAM_TOKEN
 from bot.config import ADMIN_CHAT
+from bot.config import MN_THREAD_ID
+from bot.config import MN_CHAT_ID
 from bot.schedule.get_docs import get_new_docs
 from urllib.parse import urlparse
 
@@ -20,6 +22,11 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
 
     for chat in ADMIN_CHAT:
 
+        if chat == MN_CHAT_ID:
+            mn_thread_id = MN_THREAD_ID
+        else:
+            mn_thread_id = None
+
         chunk = ""
         first = True
         for doc in formatted_docs:
@@ -29,6 +36,7 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
                 if first:
                     text = f"*Обновления в следующих документах:*\n\n{chunk}"
                     await context.bot.send_message(chat_id=chat,
+                                                   message_thread_id=mn_thread_id,
                                                    text=text, parse_mode="Markdown",
                                                    disable_web_page_preview=True)
                     first = False
@@ -36,6 +44,7 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
                 else:
 
                     await context.bot.send_message(chat_id=chat,
+                                                   message_thread_id=mn_thread_id,
                                                    text=chunk, parse_mode="Markdown",
                                                    disable_web_page_preview=True)
                 chunk = doc
@@ -44,10 +53,12 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
             if first:
                 text = f"*Обновления в следующих документах:*\n\n{chunk}"
                 await context.bot.send_message(chat_id=chat,
+                                               message_thread_id=mn_thread_id,
                                                text=text, parse_mode="Markdown",
                                                disable_web_page_preview=True)
             else:
                 await context.bot.send_message(chat_id=chat,
+                                               message_thread_id=mn_thread_id,
                                                text=chunk, parse_mode="Markdown",
                                                disable_web_page_preview=True)
 
