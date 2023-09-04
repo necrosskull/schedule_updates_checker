@@ -18,36 +18,38 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
         file_name = urlparse(doc.url).path.split('/')[-1]
         formatted_docs.append(f"[{file_name}]({doc.url})\n")
 
-    chunk = ""
-    first = True
-    for doc in formatted_docs:
-        if len(chunk) + len(doc) <= 4096:
-            chunk += doc
-        else:
+    for chat in ADMIN_CHAT:
+
+        chunk = ""
+        first = True
+        for doc in formatted_docs:
+            if len(chunk) + len(doc) <= 4096:
+                chunk += doc
+            else:
+                if first:
+                    text = f"*Обновления в следующих документах:*\n\n{chunk}"
+                    await context.bot.send_message(chat_id=chat,
+                                                   text=text, parse_mode="Markdown",
+                                                   disable_web_page_preview=True)
+                    first = False
+
+                else:
+
+                    await context.bot.send_message(chat_id=chat,
+                                                   text=chunk, parse_mode="Markdown",
+                                                   disable_web_page_preview=True)
+                chunk = doc
+
+        if chunk:
             if first:
                 text = f"*Обновления в следующих документах:*\n\n{chunk}"
-                await context.bot.send_message(chat_id=ADMIN_CHAT,
+                await context.bot.send_message(chat_id=chat,
                                                text=text, parse_mode="Markdown",
                                                disable_web_page_preview=True)
-                first = False
-
             else:
-
-                await context.bot.send_message(chat_id=ADMIN_CHAT,
+                await context.bot.send_message(chat_id=chat,
                                                text=chunk, parse_mode="Markdown",
                                                disable_web_page_preview=True)
-            chunk = doc
-
-    if chunk:
-        if first:
-            text = f"*Обновления в следующих документах:*\n\n{chunk}"
-            await context.bot.send_message(chat_id=ADMIN_CHAT,
-                                           text=text, parse_mode="Markdown",
-                                           disable_web_page_preview=True)
-        else:
-            await context.bot.send_message(chat_id=ADMIN_CHAT,
-                                           text=chunk, parse_mode="Markdown",
-                                           disable_web_page_preview=True)
 
 
 def main():
