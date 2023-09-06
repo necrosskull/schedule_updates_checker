@@ -8,6 +8,11 @@ from bot.config import MN_CHAT_ID
 from bot.schedule.get_docs import get_new_docs
 from urllib.parse import urlparse
 
+import logging
+
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
+logging.getLogger("httpx").setLevel(logging.WARNING)
+
 
 async def send_updates(context: ContextTypes.DEFAULT_TYPE):
     new_docs = get_new_docs()
@@ -17,6 +22,7 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
 
     formatted_docs = []
     for doc in new_docs:
+        logging.info(f"New document: {doc.url}")
         file_name = urlparse(doc.url).path.split('/')[-1]
         formatted_docs.append(f"[{file_name}]({doc.url})\n")
 
