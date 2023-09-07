@@ -36,7 +36,7 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
     blocks = []
 
     for institute, groups in new_docs.items():
-        institute_block = f'*{institute}*\n{", ".join(groups)}\n\n'
+        institute_block = f'*{institute}*\n`{", ".join(groups)}`\n\n'
         blocks.append(institute_block)
 
     for chat in ADMIN_CHAT:
