@@ -151,3 +151,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 bot/schedule/saved_documents.pkl
+/bot/schedule/toparse
+bot/handlers/saved_documents.pkl
+bot/handlers/schedule.pkl
+bot/schedule/schedule.pkl

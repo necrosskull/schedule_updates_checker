@@ -6,6 +6,7 @@ from bot.config import ADMIN_CHAT
 from bot.config import MN_THREAD_ID
 from bot.config import MN_CHAT_ID
 from bot.schedule.get_docs import get_new_docs
+from bot.schedule.get_docs import download_docs
 from urllib.parse import urlparse
 
 import logging
@@ -15,16 +16,28 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
 async def send_updates(context: ContextTypes.DEFAULT_TYPE):
-    new_docs = get_new_docs()
+    docs = get_new_docs()
 
-    if new_docs is None:
+    if docs is None:
         return
 
     formatted_docs = []
-    for doc in new_docs:
+    for doc in docs:
         logging.info(f"New document: {doc.url}")
-        file_name = urlparse(doc.url).path.split('/')[-1]
-        formatted_docs.append(f"[{file_name}]({doc.url})\n")
+
+        if doc.url.endswith(".xlsx") or doc.url.endswith(".xls"):
+            file_name = urlparse(doc.url).path.split('/')[-1]
+            formatted_docs.append(f"[{file_name}]({doc.url})\n")
+
+    if not formatted_docs:
+        return
+
+    new_docs = download_docs()
+    blocks = []
+
+    for institute, groups in new_docs.items():
+        institute_block = f'*{institute}*\n{", ".join(groups)}\n\n'
+        blocks.append(institute_block)
 
     for chat in ADMIN_CHAT:
 
@@ -35,12 +48,12 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
 
         chunk = ""
         first = True
-        for doc in formatted_docs:
-            if len(chunk) + len(doc) <= 4096:
-                chunk += doc
+        for block in blocks:
+            if len(chunk) + len(block) <= 4096:
+                chunk += block
             else:
                 if first:
-                    text = f"*Обновления в следующих документах:*\n\n{chunk}"
+                    text = f"*Обновления в расписании!*\n\n{chunk}"
                     await context.bot.send_message(chat_id=chat,
                                                    message_thread_id=mn_thread_id,
                                                    text=text, parse_mode="Markdown",
@@ -53,11 +66,11 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
                                                    message_thread_id=mn_thread_id,
                                                    text=chunk, parse_mode="Markdown",
                                                    disable_web_page_preview=True)
-                chunk = doc
+                chunk = block
 
         if chunk:
             if first:
-                text = f"*Обновления в следующих документах:*\n\n{chunk}"
+                text = f"*Обновления в расписании!*\n\n{chunk}"
                 await context.bot.send_message(chat_id=chat,
                                                message_thread_id=mn_thread_id,
                                                text=text, parse_mode="Markdown",
@@ -71,5 +84,5 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
 
 def main():
     application = Application.builder().token(TELEGRAM_TOKEN).build()
-    application.job_queue.run_repeating(send_updates, interval=60, first=0)
+    application.job_queue.run_repeating(send_updates, interval=10, first=0)
     application.run_polling()
