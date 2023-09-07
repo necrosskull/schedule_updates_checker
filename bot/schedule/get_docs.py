@@ -27,7 +27,7 @@ def load_schedule():
 def fetch_docs():
     downloader = ScheduleDownloader()
     saved_documents = load_saved_documents()
-    new_documents = downloader.get_documents(specific_degrees={Degree.BACHELOR, Degree.MASTER})
+    new_documents = downloader.get_documents(specific_degrees={Degree.BACHELOR})
 
     with open(os.path.join(os.path.dirname(__file__), "saved_documents.pkl"), "wb") as file:
         pickle.dump(new_documents, file)
