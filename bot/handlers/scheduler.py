@@ -58,7 +58,7 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
                 chunk += block
             else:
                 if first:
-                    text = f"*Обновления в расписании!*\n\n{link_text}\n\n{chunk}"
+                    text = f"*Обновления в расписании!*\n\n{link_text}\n{chunk}"
                     await context.bot.send_message(chat_id=chat,
                                                    message_thread_id=mn_thread_id,
                                                    text=text, parse_mode="Markdown",
@@ -75,7 +75,7 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
 
         if chunk:
             if first:
-                text = f"*Обновления в расписании!*\n\n{link_text}\n\n{chunk}"
+                text = f"*Обновления в расписании!*\n\n{link_text}\n{chunk}"
                 await context.bot.send_message(chat_id=chat,
                                                message_thread_id=mn_thread_id,
                                                text=text, parse_mode="Markdown",
@@ -89,5 +89,5 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
 
 def main():
     application = Application.builder().token(TELEGRAM_TOKEN).build()
-    application.job_queue.run_repeating(send_updates, interval=120, first=0)
+    application.job_queue.run_repeating(send_updates, interval=60, first=0)
     application.run_polling()
