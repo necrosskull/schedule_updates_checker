@@ -7,6 +7,8 @@ import os
 
 from rtu_schedule_parser.utils import Period
 
+downloader = ScheduleDownloader()
+
 
 def load_saved_documents():
     try:
@@ -25,7 +27,6 @@ def load_schedule():
 
 
 def fetch_docs():
-    downloader = ScheduleDownloader()
     saved_documents = load_saved_documents()
     new_documents = downloader.get_documents(specific_degrees={Degree.BACHELOR})
 
@@ -43,7 +44,6 @@ def fetch_docs():
 
 
 def download_docs():
-    downloader = ScheduleDownloader()
     docs = downloader.get_documents(specific_degrees={Degree.BACHELOR})
 
     downloaded = downloader.download_all(docs)
