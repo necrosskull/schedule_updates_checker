@@ -37,6 +37,8 @@ def fetch_docs():
         if doc not in saved_documents:
             new_docs.append(doc)
 
+    saved_documents.clear()
+    new_documents.clear()
     return new_docs
 
 
@@ -89,6 +91,9 @@ def download_docs():
 
             # Добавляем группу к соответствующему институту
         groups_by_institute[institute].append(group_name)
+
+    saved_schedule.clear()
+    new_schedule.clear()
 
     return groups_by_institute
 

@@ -30,6 +30,7 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
             formatted_docs.append(f"[{file_name}]({doc.url})\n")
 
     if not formatted_docs:
+        formatted_docs.clear()
         return
 
     link_text = ''
@@ -85,9 +86,10 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
                                                message_thread_id=mn_thread_id,
                                                text=chunk, parse_mode="Markdown",
                                                disable_web_page_preview=True)
+    return
 
 
 def main():
     application = Application.builder().token(TELEGRAM_TOKEN).build()
-    application.job_queue.run_repeating(send_updates, interval=60, first=0)
+    application.job_queue.run_repeating(send_updates, interval=300)
     application.run_polling()
