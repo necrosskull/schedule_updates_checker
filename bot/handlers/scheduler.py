@@ -5,7 +5,7 @@ from bot.config import TELEGRAM_TOKEN
 from bot.config import ADMIN_CHAT
 from bot.config import MN_THREAD_ID
 from bot.config import MN_CHAT_ID
-from bot.schedule.get_docs import get_new_docs
+from bot.schedule.get_docs import fetch_docs
 from bot.schedule.get_docs import download_docs
 from urllib.parse import urlparse
 
@@ -16,7 +16,7 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
 async def send_updates(context: ContextTypes.DEFAULT_TYPE):
-    docs = get_new_docs()
+    docs = fetch_docs()
 
     if docs is None:
         return
@@ -31,6 +31,7 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
 
     if not formatted_docs:
         formatted_docs.clear()
+        docs.clear()
         return
 
     link_text = ''

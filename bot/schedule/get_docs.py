@@ -40,6 +40,11 @@ def fetch_docs():
 
     saved_documents.clear()
     new_documents.clear()
+
+    if len(new_docs) < 1:
+        new_docs.clear()
+        return None
+
     return new_docs
 
 
@@ -94,14 +99,6 @@ def download_docs():
 
     saved_schedule.clear()
     new_schedule.clear()
+    schedule.clear()
 
     return groups_by_institute
-
-
-def get_new_docs():
-    new_docs = fetch_docs()
-
-    if len(new_docs) < 1:
-        return None
-    else:
-        return new_docs
