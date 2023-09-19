@@ -86,6 +86,7 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
                                                message_thread_id=mn_thread_id,
                                                text=chunk, parse_mode="Markdown",
                                                disable_web_page_preview=True)
+    new_docs.clear()
     return
 
 
