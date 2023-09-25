@@ -156,3 +156,4 @@ bot/handlers/saved_documents.pkl
 bot/handlers/schedule.pkl
 bot/schedule/schedule.pkl
 bot/main.py
+bot/schedule/test.py

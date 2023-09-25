@@ -82,8 +82,12 @@ def download_docs():
         pickle.dump(schedule, file)
 
     new_schedule = []
+
     for group in schedule:
-        if group not in saved_schedule:
+        matching_group = next((saved_group for saved_group in saved_schedule if saved_group.lessons == group.lessons),
+                              None)
+
+        if matching_group is None:
             new_schedule.append(group)
 
     groups_by_institute = {}

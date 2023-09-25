@@ -56,7 +56,12 @@ async def send_updates(context: ContextTypes.DEFAULT_TYPE):
         chunk = ""
         first = True
         for block in blocks:
-            if len(chunk) + len(block) <= 4096:
+
+            link_len = len(link_text)
+            if not first:
+                link_len = 0
+
+            if len(chunk) + len(block) + link_len <= 4096:
                 chunk += block
             else:
                 if first:
